@@ -1,7 +1,8 @@
 <template>
-    <header class="flex justify-between items-center border-b border-black px-8 py-6">
+    <header class="flex justify-between items-center border-b border-gray-300 px-8 py-6">
       <div class="flex items-center gap-4">
         <h2 class="text-xl font-bold uppercase">Masiri</h2>
+        <p>|</p>
         <p class="text-slate-500">Лавка колец</p>
       </div>
   
