@@ -1,7 +1,24 @@
 <script setup>
+
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+
 import TheHeader from './components/TheHeader.vue';
 import CartList from './components/CartList.vue';
 import IDrawer from './components/IDrawer.vue';
+
+const items = ref([])
+
+onMounted(async() => {
+  try{
+    const { data } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/items')
+
+    items.value = data
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 </script>
 
 <template>
@@ -28,7 +45,7 @@ import IDrawer from './components/IDrawer.vue';
          </div>
 
         </div>
-        <CartList/>
+        <CartList :items="items"/>
       </div>
     </div>
   </div>

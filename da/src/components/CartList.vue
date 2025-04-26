@@ -1,6 +1,10 @@
 <script setup>
 import ICart from './ICart.vue';
 
+defineProps({
+  items: Array
+})
+
 const onClickAdd = () => {
   console.log('Товар добавлен в корзину');
   // Здесь может быть логика добавления в корзину
@@ -15,9 +19,11 @@ const onClickFavorite = () => {
 <template>
   <div class="grid grid-cols-4 gap-5">
     <ICart
-      title="Кольцо Langma-ruti"
-      imageUrl="/rings/ring-1.jpg"
-      :price="4950"
+       v-for="item in items"
+      :key="item.id"
+      :title="item.name"
+      :imageUrl="item.imageUrl"
+      :price="item.price"
       :isAdded="true"
       :isFavorite="true"
       :onClickAdd="onClickAdd"
