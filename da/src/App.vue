@@ -11,7 +11,7 @@ const items = ref([])
 
 onMounted(async() => {
   try{
-    const { data } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/items')
+    const { data } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/shop')
 
     items.value = data
   } catch (err) {
@@ -24,7 +24,7 @@ onMounted(async() => {
 <template>
   <div>
      <!-- <IDrawer/>  -->
-    <div class="bg-white w-4/5 m-auto h-screen rounded-xl border-2 border-gray-300 shadow-xl mt-10">
+    <div class="bg-white w-4/5 m-auto rounded-xl border-2 border-gray-300 shadow-xl mt-10 h-fit">
       <TheHeader />
       <div class="p-10">
         <div class="flex justify-between items-center">

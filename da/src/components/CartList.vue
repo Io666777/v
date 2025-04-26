@@ -17,9 +17,10 @@ const onClickFavorite = () => {
 </script>
 
 <template>
+  <div class="h-fit">
   <div class="grid grid-cols-4 gap-5">
     <ICart
-       v-for="item in items"
+      v-for="item in items"
       :key="item.id"
       :title="item.name"
       :imageUrl="item.imageUrl"
@@ -30,4 +31,5 @@ const onClickFavorite = () => {
       :onClickFavorite="onClickFavorite"
     />
   </div>
+</div>
 </template>
