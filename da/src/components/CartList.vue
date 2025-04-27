@@ -1,21 +1,16 @@
 <script setup>
-import { inject } from 'vue';
+// Импортируем компонент ICart
 import ICart from './ICart.vue';
 
 defineProps({
   items: Array
 });
 
-// Получаем функцию toggleFavorite через inject
-const toggleFavorite = inject('toggleFavorite');
-
-if (!toggleFavorite) {
-  console.error('Ошибка: toggleFavorite не предоставлена через provide/inject.');
-}
+const emit = defineEmits(['addToFavorite']);
 
 // Обработчик для добавления/удаления из избранного
-const onClickFavorite = (item) => {
-  toggleFavorite(item);
+const handleAddToFavorite = (item) => {
+  emit('addToFavorite', item); // Передача события родителю
 };
 </script>
 
@@ -30,7 +25,7 @@ const onClickFavorite = (item) => {
       :price="item.price"
       :isFavorite="item.isFavorite"
       :isAdded="item.isAdded"
-      :onClickFavorite="() => onClickFavorite(item)"
+      :onClickFavorite="() => handleAddToFavorite(item)"
     />
   </div>
 </template>

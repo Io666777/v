@@ -13,7 +13,6 @@ defineProps({
 
 <template>
   <div class="bg-white relative m-10 border border-slate-100 rounded-xl p-8 overflow-hidden cursor-pointer transition hover:-translate-y-2 hover:shadow-xl">
-    <!-- Обновленный стиль для иконки избранного -->
     <img
       :src="isFavorite ? '/like-2.svg' : '/like-1.svg'"
       alt="Избранное"

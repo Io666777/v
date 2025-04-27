@@ -1,19 +1,18 @@
 <script setup>
 // Импорт необходимых модулей и компонентов
-import { onMounted, reactive, ref, provide, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import axios from 'axios';
 
 import TheHeader from './components/TheHeader.vue';
 import CartList from './components/CartList.vue';
-import IDrawer from './components/IDrawer.vue';
 
 // Реактивное хранилище для списка товаров
 const items = ref([]);
 
 // Реактивный объект фильтров
 const filters = reactive({
-  sortBy: 'title',  // Сортировка по умолчанию
-  searchQuery: ''   // Поле поиска
+  sortBy: 'title', // Сортировка по умолчанию
+  searchQuery: ''  // Поле поиска
 });
 
 // Обработчик изменения сортировки
@@ -30,9 +29,10 @@ const onChangeSelectInput = (event) => {
 const fetchFavorites = async () => {
   try {
     const { data: favorites } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/favorites');
-    
-    items.value = items.value.map(item => {
-      const favorite = favorites.find(favorite => favorite.parentId === item.id);
+
+    // Проблемное место: здесь требуется корректное мапирование данных
+    items.value = items.value.map((item) => {
+      const favorite = favorites.find((favorite) => favorite.parentId === item.id);
       return favorite
         ? { ...item, isFavorite: true, favoriteId: favorite.id }
         : { ...item, isFavorite: false };
@@ -48,15 +48,13 @@ const toggleFavorite = async (item) => {
     if (item.isFavorite) {
       // Удаляем из избранного
       await axios.delete(`https://db07bcdb7e4a04f7.mokky.dev/favorites/${item.favoriteId}`);
-      item.isFavorite = false;
+      item.isFavorite = false; // Убираем сердечко
       console.log(`Товар удален из избранного: ${item.title}`);
     } else {
       // Добавляем в избранное
-      const { data } = await axios.post('https://db07bcdb7e4a04f7.mokky.dev/favorites', {
-        parentId: item.id,
-        ...item
-      });
-      item.isFavorite = true;
+      const obj = { parentId: item.id };
+      const { data } = await axios.post('https://db07bcdb7e4a04f7.mokky.dev/favorites', obj);
+      item.isFavorite = true; // Добавляем сердечко
       item.favoriteId = data.id;
       console.log(`Товар добавлен в избранное: ${item.title}`);
     }
@@ -75,7 +73,7 @@ const fetchItems = async () => {
 
     const { data } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/shop', { params });
 
-    items.value = data.map(item => ({
+    items.value = data.map((item) => ({
       ...item,
       isFavorite: false,
       isAdded: false
@@ -96,9 +94,6 @@ watch(
   () => [filters.sortBy, filters.searchQuery],
   fetchItems
 );
-
-// Предоставляем функцию toggleFavorite через provide
-provide('toggleFavorite', toggleFavorite);
 </script>
 
 <template>
@@ -110,6 +105,7 @@ provide('toggleFavorite', toggleFavorite);
           <h2 class="text-3xl font-bold mb-8">Все кольца</h2>
 
           <div class="flex gap-4">
+            <!-- Сортировка -->
             <select
               @change="onChangeSelect"
               class="py-2 px-3 text-gray-500 border border-gray-300 rounded-md outline-none"
@@ -118,6 +114,8 @@ provide('toggleFavorite', toggleFavorite);
               <option value="-price">По цене (дорогие)</option>
               <option value="title">По названию</option>
             </select>
+
+            <!-- Поиск -->
             <input
               class="border border-gray-300 rounded-md py-2 pl-10 pr-4 outline-none focus:border-gray-400"
               type="text"
@@ -126,7 +124,8 @@ provide('toggleFavorite', toggleFavorite);
             />
           </div>
         </div>
-        <CartList :items="items" @addToFavorite=""addToFavorite />
+        <!-- Событие addToFavorite -->
+        <CartList :items="items" @addToFavorite="toggleFavorite" />
       </div>
     </div>
   </div>
