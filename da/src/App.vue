@@ -1,59 +1,85 @@
 <script setup>
-// Импортируем необходимые модули и компоненты
-import { onMounted, reactive, ref, watch } from 'vue';
-import axios from 'axios'; // Для работы с API
+// Импорт необходимых модулей и компонентов
+import { onMounted, provide, reactive, ref, provide, watch } from 'vue';
+import axios from 'axios';
 
-import TheHeader from './components/TheHeader.vue'; // Шапка страницы
-import CartList from './components/CartList.vue';   // Компонент для отображения товаров
-import IDrawer from './components/IDrawer.vue';     // Боковая панель (опционально)
+import TheHeader from './components/TheHeader.vue';
+import CartList from './components/CartList.vue';
+import IDrawer from './components/IDrawer.vue';
 
 // Реактивное хранилище для списка товаров
 const items = ref([]);
 
-// Реактивный объект для фильтров
+// Реактивный объект фильтров
 const filters = reactive({
   sortBy: 'title',  // Сортировка по умолчанию
   searchQuery: ''   // Поле поиска
 });
 
-// Функция для изменения сортировки
+// Обработчик изменения сортировки
 const onChangeSelect = (event) => {
-  filters.sortBy = event.target.value; // Обновляем значение sortBy
+  filters.sortBy = event.target.value;
 };
 
-// Функция для обновления значения поля поиска
+// Обработчик изменения поля поиска
 const onChangeSelectInput = (event) => {
-  filters.searchQuery = event.target.value; // Обновляем значение searchQuery
+  filters.searchQuery = event.target.value;
 };
 
-// Функция для получения данных с сервера
+// Функция для получения избранных товаров
+const fetchFavorites = async () => {
+  try {
+    const { data: favorites } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/favorites');
+    
+    items.value = items.value.map(item => {
+      const favorite = favorites.find(favorite => favorite.parentId === item.id);
+      return favorite
+        ? { ...item, isFavorite: true, favoriteId: favorite.id }
+        : item;
+    });
+  } catch (err) {
+    console.error('Ошибка при загрузке избранного:', err);
+  }
+};
+
+const addToFavorite = asunc (item) => {
+  item.isFavorite = true;
+  console.log(item)
+};
+
+// Функция для получения списка товаров с учетом фильтров
 const fetchItems = async () => {
   try {
-    // Подготавливаем параметры для запроса
     const params = {
-      sortBy: filters.sortBy // Добавляем параметр сортировки
+      sortBy: filters.sortBy,
+      ...(filters.searchQuery && { title: `*${filters.searchQuery}*` }) // Добавляем параметр поиска, если он указан
     };
 
-    // Если пользователь ввел текст в поисковую строку, добавляем параметр поиска
-    if (filters.searchQuery) {
-      params.title = `*${filters.searchQuery}*`;
-    }
-
-    // Выполняем GET-запрос к серверу
     const { data } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/shop', { params });
 
-    // Обновляем список товаров
-    items.value = data;
+    items.value = data.map(item => ({
+      ...item,
+      isFavorite: false,
+      isAdded: false
+    }));
   } catch (err) {
-    console.error('Ошибка при получении данных:', err); // Логируем ошибку
+    console.error('Ошибка при загрузке товаров:', err);
   }
 };
 
 // Загружаем данные при монтировании компонента
-onMounted(fetchItems);
+onMounted(async () => {
+  await fetchItems();
+  await fetchFavorites();
+});
 
-// Отслеживаем изменения фильтров и вызываем fetchItems при изменении
-watch(filters, fetchItems);
+// Отслеживаем изменения фильтров и обновляем список товаров
+watch(
+  () => [filters.sortBy, filters.searchQuery],
+  fetchItems
+);
+
+provide('addToFavorite', addToFavorite);
 </script>
 
 <template>
@@ -75,10 +101,10 @@ watch(filters, fetchItems);
             >
               <option value="price" class="text-gray-500">По цене (дешевые)</option>
               <option value="-price" class="text-gray-500">По цене (дорогие)</option>
-              <option value="name" class="text-gray-500">По названию</option>
+              <option value="title" class="text-gray-500">По названию</option>
             </select>
 
-            <!-- Поле для ввода текста поиска -->
+            <!-- Поле поиска -->
             <div class="relative">
               <img class="absolute top-3.5 left-4" src="/search.svg" />
               <input
@@ -91,7 +117,7 @@ watch(filters, fetchItems);
           </div>
         </div>
 
-        <!-- Компонент отображения списка товаров -->
+        <!-- Компонент списка товаров -->
         <CartList :items="items" />
       </div>
     </div>
