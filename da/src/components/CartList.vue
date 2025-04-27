@@ -1,57 +1,36 @@
 <script setup>
-// Импортируем необходимые модули и компоненты
-import { inject, defineProps } from 'vue';
+import { inject } from 'vue';
 import ICart from './ICart.vue';
 
-// Указываем, что компонент принимает список товаров через props
 defineProps({
   items: Array
 });
 
-// Обработчик для добавления в корзину
-const onClickAdd = (item) => {
-  console.log(`Товар добавлен в корзину: ${item.name}`);
-  // Здесь можно добавить логику для добавления в корзину
-};
+// Получаем функцию toggleFavorite через inject
+const toggleFavorite = inject('toggleFavorite');
 
-// Инъекция функции добавления в избранное из родительского контекста
-const addToFavorite = inject('addToFavorite');
-
-if (!addToFavorite) {
-  console.error('addToFavorite не передан через provide/inject');
+if (!toggleFavorite) {
+  console.error('Ошибка: toggleFavorite не предоставлена через provide/inject.');
 }
 
-// Обработчик для добавления в избранное
+// Обработчик для добавления/удаления из избранного
 const onClickFavorite = (item) => {
-  if (!addToFavorite) {
-    console.error('addToFavorite не найден, невозможно добавить в избранное.');
-    return;
-  }
-
-  const obj = {
-    ...item, // Используем текущий объект товара
-    parentId: item.id // Указываем parentId как идентификатор товара
-  };
-
-  console.log(`Товар добавлен в избранное: ${item.name}`);
-  addToFavorite(obj); // Передаем объект функции addToFavorite
+  toggleFavorite(item);
 };
 </script>
 
 <template>
-  <div class="h-fit">
-    <div class="grid grid-cols-4 gap-5">
-      <!-- Передаем данные и обработчики в компонент ICart -->
-      <ICart
-        v-for="item in items"
-        :key="item.id"
-        :id="item.id"
-        :title="item.name"
-        :imageUrl="item.imageUrl"
-        :price="item.price"
-        :onClickAdd="() => onClickAdd(item)"
-        :onClickFavorite="() => onClickFavorite(item)"
-      />
-    </div>
+  <div class="grid grid-cols-4 gap-5">
+    <ICart
+      v-for="item in items"
+      :key="item.id"
+      :id="item.id"
+      :title="item.name"
+      :imageUrl="item.imageUrl"
+      :price="item.price"
+      :isFavorite="item.isFavorite"
+      :isAdded="item.isAdded"
+      :onClickFavorite="() => onClickFavorite(item)"
+    />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup>
 // Импорт необходимых модулей и компонентов
-import { onMounted, provide, reactive, ref, provide, watch } from 'vue';
+import { onMounted, reactive, ref, provide, watch } from 'vue';
 import axios from 'axios';
 
 import TheHeader from './components/TheHeader.vue';
@@ -35,16 +35,34 @@ const fetchFavorites = async () => {
       const favorite = favorites.find(favorite => favorite.parentId === item.id);
       return favorite
         ? { ...item, isFavorite: true, favoriteId: favorite.id }
-        : item;
+        : { ...item, isFavorite: false };
     });
   } catch (err) {
     console.error('Ошибка при загрузке избранного:', err);
   }
 };
 
-const addToFavorite = asunc (item) => {
-  item.isFavorite = true;
-  console.log(item)
+// Функция добавления/удаления из избранного
+const toggleFavorite = async (item) => {
+  try {
+    if (item.isFavorite) {
+      // Удаляем из избранного
+      await axios.delete(`https://db07bcdb7e4a04f7.mokky.dev/favorites/${item.favoriteId}`);
+      item.isFavorite = false;
+      console.log(`Товар удален из избранного: ${item.title}`);
+    } else {
+      // Добавляем в избранное
+      const { data } = await axios.post('https://db07bcdb7e4a04f7.mokky.dev/favorites', {
+        parentId: item.id,
+        ...item
+      });
+      item.isFavorite = true;
+      item.favoriteId = data.id;
+      console.log(`Товар добавлен в избранное: ${item.title}`);
+    }
+  } catch (err) {
+    console.error('Ошибка при изменении избранного:', err);
+  }
 };
 
 // Функция для получения списка товаров с учетом фильтров
@@ -52,7 +70,7 @@ const fetchItems = async () => {
   try {
     const params = {
       sortBy: filters.sortBy,
-      ...(filters.searchQuery && { title: `*${filters.searchQuery}*` }) // Добавляем параметр поиска, если он указан
+      ...(filters.searchQuery && { title: `*${filters.searchQuery}*` })
     };
 
     const { data } = await axios.get('https://db07bcdb7e4a04f7.mokky.dev/shop', { params });
@@ -79,46 +97,36 @@ watch(
   fetchItems
 );
 
-provide('addToFavorite', addToFavorite);
+// Предоставляем функцию toggleFavorite через provide
+provide('toggleFavorite', toggleFavorite);
 </script>
 
 <template>
   <div>
-    <!-- Основной контейнер -->
     <div class="bg-white w-4/5 m-auto rounded-xl border-2 border-gray-300 shadow-xl mt-10 h-fit">
-      <TheHeader /> <!-- Компонент шапки -->
-
+      <TheHeader />
       <div class="p-10">
-        <!-- Заголовок и фильтры -->
         <div class="flex justify-between items-center">
           <h2 class="text-3xl font-bold mb-8">Все кольца</h2>
 
           <div class="flex gap-4">
-            <!-- Выпадающий список для сортировки -->
             <select
               @change="onChangeSelect"
               class="py-2 px-3 text-gray-500 border border-gray-300 rounded-md outline-none"
             >
-              <option value="price" class="text-gray-500">По цене (дешевые)</option>
-              <option value="-price" class="text-gray-500">По цене (дорогие)</option>
-              <option value="title" class="text-gray-500">По названию</option>
+              <option value="price">По цене (дешевые)</option>
+              <option value="-price">По цене (дорогие)</option>
+              <option value="title">По названию</option>
             </select>
-
-            <!-- Поле поиска -->
-            <div class="relative">
-              <img class="absolute top-3.5 left-4" src="/search.svg" />
-              <input
-                class="border border-gray-300 rounded-md py-2 pl-10 pr-4 outline-none focus:border-gray-400"
-                type="text"
-                placeholder="Поиск..."
-                @input="onChangeSelectInput"
-              />
-            </div>
+            <input
+              class="border border-gray-300 rounded-md py-2 pl-10 pr-4 outline-none focus:border-gray-400"
+              type="text"
+              placeholder="Поиск..."
+              @input="onChangeSelectInput"
+            />
           </div>
         </div>
-
-        <!-- Компонент списка товаров -->
-        <CartList :items="items" />
+        <CartList :items="items" @addToFavorite=""addToFavorite />
       </div>
     </div>
   </div>
