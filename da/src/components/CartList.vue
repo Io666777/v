@@ -1,14 +1,12 @@
 <script setup>
-// Импортируем компонент ICart
 import ICart from './ICart.vue';
 
 defineProps({
   items: Array
 });
 
-const emit = defineEmits(['addToFavorite']);
+const emit = defineEmits(['addToFavorite', 'addToCart']);
 
-// Обработчик для добавления/удаления из избранного
 const handleAddToFavorite = (item) => {
   emit('addToFavorite', item); // Передача события родителю
 };
@@ -26,6 +24,7 @@ const handleAddToFavorite = (item) => {
       :isFavorite="item.isFavorite"
       :isAdded="item.isAdded"
       :onClickFavorite="() => handleAddToFavorite(item)"
+      :onClickAdd="() => emit('addToCart', item)"
     />
   </div>
 </template>

@@ -1,5 +1,8 @@
 <script setup>
 import CartItem from './CartItem.vue';
+import { inject } from 'vue';
+
+const { closeDrawer } = inject('cart')
 </script>
 
 <template>
@@ -10,13 +13,11 @@ import CartItem from './CartItem.vue';
     <!-- Основной контейнер корзины -->
     <div class="bg-white w-96 h-full fixed right-0 top-0 z-20 p-8 flex flex-col">
       <!-- Заголовок -->
-      <h2 class="text-2xl font-bold mb-6">Корзина</h2>
+      <h2 class="text-2xl font-bold mb-6" @click="closeDrawer">Корзина</h2>
       
       <!-- Список товаров -->
       <div class="flex-1 overflow-y-auto mb-6">
-        <CartItem />
-        <CartItem />
-        <CartItem />
+
       </div>
       
       <!-- Итоговая сумма -->
@@ -40,4 +41,3 @@ import CartItem from './CartItem.vue';
     </div>
   </div>
 </template>
-<!--  -->

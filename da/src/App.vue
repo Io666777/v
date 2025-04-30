@@ -1,6 +1,6 @@
 <script setup>
 // Импорт необходимых модулей и компонентов
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, provide, reactive, ref, watch } from 'vue';
 import axios from 'axios';
 
 import TheHeader from './components/TheHeader.vue';
@@ -9,14 +9,17 @@ import IDrawer from './components/IDrawer.vue'
 
 // Реактивное хранилище для списка товаров
 const items = ref([]);
+const cart = ref([])
 
-const drawerOpen = ref(false)
+const drawerOpen = ref(true)
 
 const closeDrawer= () =>{
   drawerOpen.value = false
 }
 
-
+const openDrawer= () =>{
+  drawerOpen.value = true
+}
 
 // Реактивный объект фильтров
 const filters = reactive({
@@ -27,6 +30,16 @@ const filters = reactive({
 // Обработчик изменения сортировки
 const onChangeSelect = (event) => {
   filters.sortBy = event.target.value;
+};
+
+const addToCart = (item) => {
+  if (!item.isAdded) {
+    cart.value.push(item)
+    item.isAdded = true
+  } else{
+    cart.value.splice(cart.value.indexOf(item), 1)
+    item.isAdded = false
+  }
 };
 
 // Обработчик изменения поля поиска
@@ -103,13 +116,19 @@ watch(
   () => [filters.sortBy, filters.searchQuery],
   fetchItems
 );
+
+provide('cart',{
+  cart,
+  closeDrawer,
+  openDrawer
+})
 </script>
 
 <template>
   <div>
     <IDrawer v-if="drawerOpen"/> 
     <div class="bg-white w-4/5 m-auto rounded-xl border-2 border-gray-300 shadow-xl mt-10 h-fit">
-      <TheHeader />
+      <TheHeader @openDrawer="openDrawer" />
       <div class="p-10">
         <div class="flex justify-between items-center">
           <h2 class="text-3xl font-bold mb-8">Все кольца</h2>
@@ -135,7 +154,7 @@ watch(
           </div>
         </div>
         <!-- Событие addToFavorite -->
-        <CartList :items="items" @addToFavorite="toggleFavorite" />
+        <CartList :items="items" @addToFavorite="toggleFavorite" @addToCart="addToCart" />
       </div>
     </div>
   </div>
