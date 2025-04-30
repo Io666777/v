@@ -12,6 +12,12 @@ const items = ref([]);
 
 const drawerOpen = ref(false)
 
+const closeDrawer= () =>{
+  drawerOpen.value = false
+}
+
+
+
 // Реактивный объект фильтров
 const filters = reactive({
   sortBy: 'title', // Сортировка по умолчанию
@@ -101,7 +107,7 @@ watch(
 
 <template>
   <div>
-    <IDrawer/>
+    <IDrawer v-if="drawerOpen"/> 
     <div class="bg-white w-4/5 m-auto rounded-xl border-2 border-gray-300 shadow-xl mt-10 h-fit">
       <TheHeader />
       <div class="p-10">
