@@ -1,6 +1,6 @@
 <script setup>
 // Импорт необходимых модулей и компонентов
-import { onMounted, provide, reactive, ref, watch } from 'vue';
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue';
 import axios from 'axios';
 
 import TheHeader from './components/TheHeader.vue';
@@ -27,19 +27,21 @@ const filters = reactive({
   searchQuery: ''  // Поле поиска
 });
 
+
+const totalPrice =computed(()=> cart.value.reduce((acc, item) =>acc + item.price, 0) )
 // Обработчик изменения сортировки
 const onChangeSelect = (event) => {
   filters.sortBy = event.target.value;
 };
 
-const addToCart = (item) => {
+const onClickAddPlus = (item) => {
   if (!item.isAdded) {
-    cart.value.push(item)
-    item.isAdded = true
+    addToCart(item);
   } else{
-    cart.value.splice(cart.value.indexOf(item), 1)
-    item.isAdded = false
+    removeFromCart(item);
   }
+
+  console.log(cart)
 };
 
 // Обработчик изменения поля поиска
@@ -105,6 +107,16 @@ const fetchItems = async () => {
   }
 };
 
+const addToCart = (item) =>{
+  cart.value.push(item)
+  item.isAdded = true
+}
+
+const removeFromCart = (item) =>{
+  cart.value.splice(cart.value.indexOf(item), 1)
+  item.siAdded = false
+}
+
 // Загружаем данные при монтировании компонента
 onMounted(async () => {
   await fetchItems();
@@ -120,7 +132,9 @@ watch(
 provide('cart',{
   cart,
   closeDrawer,
-  openDrawer
+  openDrawer,
+  addToCart,
+  removeFromCart
 })
 </script>
 
@@ -128,7 +142,7 @@ provide('cart',{
   <div>
     <IDrawer v-if="drawerOpen"/> 
     <div class="bg-white w-4/5 m-auto rounded-xl border-2 border-gray-300 shadow-xl mt-10 h-fit">
-      <TheHeader @openDrawer="openDrawer" />
+      <TheHeader :totalPrice="totalPrice" @openDrawer="openDrawer" />
       <div class="p-10">
         <div class="flex justify-between items-center">
           <h2 class="text-3xl font-bold mb-8">Все кольца</h2>
@@ -154,7 +168,7 @@ provide('cart',{
           </div>
         </div>
         <!-- Событие addToFavorite -->
-        <CartList :items="items" @addToFavorite="toggleFavorite" @addToCart="addToCart" />
+        <CartList :items="items" @addToFavorite="toggleFavorite" @addToCart="onClickAddPlus" />
       </div>
     </div>
   </div>
