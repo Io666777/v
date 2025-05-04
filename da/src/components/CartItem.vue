@@ -1,28 +1,29 @@
 <script setup>
+const emit = defineEmits(['onClickRemove'])
+
 defineProps({
   id: Number,
   title: String,
   imageUrl: String,
   price: Number
-});
-
-defineEmits(['removeFromCart']);
+})
 </script>
 
 <template>
-  <div class="flex border border-slate-100 p-4 rounded-xl gap-3 justify-between items-center">
-    <div class="flex gap-3 flex-grow">
-      <img :src="imageUrl" alt="Товар" class="w-16 h-16 object-contain" />
-      <div class="flex flex-col justify-between">
-        <p class="font-medium">{{ title }}</p>
-        <b class="mt-2">{{ price }} BYN</b>
+  <div class="flex items-center border border-slate-200 p-4 rounded-xl gap-4">
+    <img class="w-16 h-16" :src="imageUrl" :alt="title" />
+
+    <div class="flex flex-col flex-1">
+      <p>{{ title }}</p>
+
+      <div class="flex justify-between mt-2">
+        <b class="flex-1">{{ price }} руб.</b>
+        <img
+          @click="emit('onClickRemove')"
+          class="opacity-40 hover:opacity-100 cursor-pointer transition"
+          src="/close.svg"
+        />
       </div>
     </div>
-    <img 
-      src="/close.svg" 
-      alt="Удалить" 
-      class="opacity-40 hover:opacity-100 cursor-pointer transition w-10 h-10"
-      @click="$emit('removeFromCart', id)"
-    />
   </div>
 </template>

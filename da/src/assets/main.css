@@ -1,9 +1,11 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  background-image: url('https://avatanplus.com/files/resources/original/590004801ca5415ba8119475.jpg');
-  image-orientation: flip;
+  background-image: url('https://grizly.club/uploads/posts/2022-12/1670595401_grizly-club-p-temnii-fon-s-uzorami-26.jpg');
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  background-size: cover; /* Ensures the image covers the entire screen */
-  background-position: center; /* Centers the image */
+  background-attachment: fixed;
 }
