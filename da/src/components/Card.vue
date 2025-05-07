@@ -12,12 +12,11 @@ defineProps({
 </script>
 
 <template>
-  <!-- Карточка с жестко заданными размерами -->
   <div 
-    class="relative bg-white border border-slate-100 rounded-3xl p-6 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl"
+    class="relative bg-white border border-slate-100 rounded-3xl p-6 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl flex flex-col"
     style="width: 300px; height: 400px; flex-shrink: 0;"
   >
-    <!-- Кнопка избранного (фиксированная позиция) -->
+    <!-- Кнопка избранного -->
     <img
       v-if="onClickFavorite"
       :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
@@ -26,23 +25,30 @@ defineProps({
       @click="onClickFavorite"
     />
 
-    <!-- Контейнер изображения (фиксированные размеры 1:1) -->
-    <div class="relative w-full h-48 mx-auto mb-4 overflow-hidden rounded-xl">
+    <!-- Изображение товара -->
+    <div class="relative w-full h-48 mx-auto mb-4 overflow-hidden rounded-xl flex-shrink-0">
       <img 
-        :src="imageUrl" 
+        :src="imageUrl || '/placeholder-product.jpg'" 
         alt="Product"
         class="absolute top-0 left-0 w-full h-full object-cover object-center"
       />
     </div>
 
-    <!-- Название товара (фиксированная высота) -->
-    <p class="text-base font-medium line-clamp-2 h-12">{{ title }}</p>
+    <!-- Название товара с улучшенным отображением -->
+    <div class="flex-grow min-h-[60px] mb-4 overflow-hidden">
+      <p 
+        class="text-base text-gray-900 font-medium line-clamp-2 break-words"
+        :title="title || 'Название товара'"
+      >
+        {{ title || 'Без названия' }}
+      </p>
+    </div>
 
-    <!-- Блок цены и кнопки (фиксированное положение внизу) -->
-    <div class="absolute bottom-6 left-6 right-6 flex justify-between items-center">
+    <!-- Блок цены и кнопки -->
+    <div class="mt-auto flex justify-between items-center">
       <div>
         <span class="text-sm text-slate-400">Цена:</span>
-        <p class="text-lg font-bold">{{ price }} руб.</p>
+        <p class="text-lg font-bold text-gray-900">{{ price || 0 }} руб.</p>
       </div>
       <img
         v-if="onClickAdd"
