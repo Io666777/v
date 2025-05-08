@@ -1,4 +1,3 @@
 <template>
-  <!-- Минимальный шаблон -->
-  <div></div>
+  <div>Амулеты</div>
 </template>
