@@ -1,5 +1,7 @@
+<script setup>
+import basePageFromItems from '../components/basePageFromItems.vue'
+</script>
+
 <template>
-  <div>
-    <h1>Серьги</h1>
-  </div>
+  <basePageFromItems category="серьги" />
 </template>

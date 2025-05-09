@@ -1,10 +1,7 @@
-<template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">Кольца</h1>
-    <!-- Контент будет добавлен позже -->
-  </div>
-</template>
-
 <script setup>
-// Логика компонента (пока пустая)
+import basePageFromItems from '../components/basePageFromItems.vue'
 </script>
+
+<template>
+  <basePageFromItems category="кольца" />
+</template>
