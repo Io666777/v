@@ -3,5 +3,6 @@ import basePageFromItems from '../components/basePageFromItems.vue'
 </script>
 
 <template>
-  <basePageFromItems category="rings" />
+  
+  <basePageFromItems category="Кольца" />
 </template>

@@ -3,5 +3,5 @@ import basePageFromItems from '../components/basePageFromItems.vue'
 </script>
 
 <template>
-  <basePageFromItems category="Bracelets" />
+  <basePageFromItems category="Браслеты" />
 </template>
