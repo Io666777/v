@@ -98,7 +98,7 @@ const toggleDetail = () => {
             </div>
             
             <div>
-              <h2 class="text-2xl font-bold mb-4">{{ title }}</h2>
+              <h2 class="text-2xl text-black font-bold mb-4">{{ title }}</h2>
               <div class="text-2xl font-bold text-gray-900 mb-6">{{ price }} руб.</div>
               
               <div class="mb-8">
