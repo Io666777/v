@@ -1,4 +1,4 @@
-серьги<script setup>
+<script setup>
 import basePageFromItems from '../components/basePageFromItems.vue'
 </script>
 
