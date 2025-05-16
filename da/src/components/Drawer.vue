@@ -69,11 +69,7 @@ const buttonDisabled = computed(() => isCreating.value || cartIsEmpty.value)
           <b>{{ totalPrice }} ₽</b>
         </div>
 
-        <div class="flex gap-2">
-          <span>Налог 5%:</span>
-          <div class="flex-1 border-b border-dashed"></div>
-          <b>{{ vatPrice }} ₽</b>
-        </div>
+
 
         <button
           :disabled="buttonDisabled"
