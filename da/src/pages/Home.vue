@@ -141,7 +141,7 @@ watch(filters, fetchItems)
           <img class="absolute left-4 top-3" src="/search.svg" />
           <input
             @input="onChangeSearchInput"
-            class="border border-gray-600 rounded-md py-2 pl-11 pr-4 outline-none focus:border-gray-400 bg-transparent text-white placeholder-gray-400"
+            class="border border-gray-600 rounded-md py-2 pl-11 pr-4 outline-none focus:border-gray-400 bg-transparent text-black placeholder-gray-400"
             type="text"
             placeholder="Поиск..."
           />
