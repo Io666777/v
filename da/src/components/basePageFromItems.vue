@@ -91,12 +91,10 @@ const fetchItems = async () => {
       params.title = `*${filters.searchQuery}*`
     }
 
-    // Добавляем фильтрацию по категории
     const { data } = await axios.get(`https://db07bcdb7e4a04f7.mokky.dev/shop`, {
       params
     })
 
-    // Фильтруем по категории на клиенте
     items.value = data
       .filter(item => item.category === props.category)
       .map(obj => ({
@@ -141,18 +139,18 @@ watch(filters, fetchItems)
       <div class="flex gap-4">
         <select 
           @change="onChangeSelect" 
-          class="py-2 px-3 border border-white rounded-md outline-none bg-white text-black"
+          class="py-2 px-3 border border-black rounded-md outline-none bg-white text-black"
         >
-          <option value="name" class="bg-white">По названию</option>
-          <option value="price" class="bg-white">По цене (дешевые)</option>
-          <option value="-price" class="bg-white">По цене (дорогие)</option>
+          <option value="name" class="bg-white text-black">По названию</option>
+          <option value="price" class="bg-white text-black">По цене (дешевые)</option>
+          <option value="-price" class="bg-white text-black">По цене (дорогие)</option>
         </select>
 
         <div class="relative">
           <img class="absolute left-4 top-3" src="/search.svg" />
           <input
             @input="onChangeSearchInput"
-            class="border border-white rounded-md py-2 pl-11 pr-4 outline-none focus:border-black bg-white text-black placeholder-black"
+            class="border border-black rounded-md py-2 pl-11 pr-4 outline-none focus:border-black bg-white text-black placeholder-black"
             type="text"
             placeholder="Поиск..."
           />

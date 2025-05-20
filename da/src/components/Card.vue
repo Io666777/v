@@ -61,7 +61,7 @@ const toggleDetail = () => {
       <div class="mt-auto flex justify-between items-center">
         <div>
           <span class="text-sm text-slate-400">Цена:</span>
-          <p class="text-lg font-bold text-gray-900">{{ price || 0 }} руб.</p>
+          <p class="text-lg font-bold text-gray-900">{{ price || 0 }} BYN.</p>
         </div>
         <img
           v-if="onClickAdd"

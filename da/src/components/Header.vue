@@ -13,7 +13,7 @@ const emit = defineEmits(['openDrawer'])
       <div class="flex items-center gap-4 w-fit">
         <img src="/logo.png" alt="Logo" class="w-10" />
         <div>
-          <h2 class="text-xl font-bold uppercase text-white">Lavka</h2>
+          <h2 class="text-xl font-bold uppercase text-black">Lavka</h2>
           <p class="text-slate-400">Магазин лучшей бижутерии</p>
         </div>
       </div>
@@ -32,7 +32,7 @@ const emit = defineEmits(['openDrawer'])
         :key="link.path"
         :to="link.path"
         class="text-gray-500 hover:text-black transition py-1 px-2"
-        active-class="!text-white !font-bold"
+        active-class="!text-black !font-bold"
       >
         {{ link.name }}
       </router-link>
